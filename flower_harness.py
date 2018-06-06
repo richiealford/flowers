@@ -34,8 +34,8 @@ model = flower_model.makeModel()
 criterion = nn.NLLLoss()
 optimizer = optim.Adam(model.classifier.parameters(), lr=0.001)
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+model.to(device)
+
 flower_model.train(model, trainloader, testloader, criterion, optimizer, 2, True)
 #flower_model.validation(model, testloader, criterion)
-
-
-

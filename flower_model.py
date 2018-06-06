@@ -21,10 +21,11 @@ def makeModel():
 	
 
 def train(model, trainloader, testloader, criterion, optimizer, epochs, logging=True):
-	
+	device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 	iteration = 0
 	for epoch in range(epochs):
 		for images, labels in trainloader:
+			images, labels = images.to(device), labels.to(device)
 			iteration += 1
 			model.train()
 			optimizer.zero_grad()
@@ -47,8 +48,9 @@ def validation(model, testloader, criterion):
 	
 	accuracy = 0
 	test_loss = 0
-	
+	device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 	for images, labels in testloader:
+		images, labels = images.to(device), labels.to(device)
 		output = model.forward(images)
 		test_loss += criterion(output, labels).item()
 		ps = torch.exp(output)
