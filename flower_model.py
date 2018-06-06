@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from collections import OrderedDict
 from torchvision import models
 
-def makeModel():
+def makeDensenet121Model():
 
 	model = models.densenet121(pretrained=True)
 	for param in model.parameters():
@@ -19,6 +19,24 @@ def makeModel():
 	model.classifier = classifier
 	return model
 	
+def makeVGG16Model():
+	
+	model = models.vgg16(pretrained=True)
+	for param in model.parameters():
+		param.requires_grad = False
+
+	classifier = nn.Sequential(OrderedDict([
+                                          ('fc1', nn.Linear(25088, 4096, bias=True)),
+                                          ('relu', nn.ReLU()),
+                                          ('fc2', nn.Linear(4096, 1000, bias=True)),
+                                          ('relu2', nn.ReLU()),	
+                                          ('fc3', nn.Linear(1000, 102)),
+                                          ('output', nn.LogSoftmax(dim=1))
+                                          ]))
+
+	model.classifier = classifier
+	return model
+
 
 def train(model, trainloader, testloader, criterion, optimizer, epochs, logging=True):
 	device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -33,7 +51,7 @@ def train(model, trainloader, testloader, criterion, optimizer, epochs, logging=
 			loss = criterion(outputs, labels)
 			loss.backward()
 			optimizer.step()
-			
+			print(iteration)	
 			if iteration % 5 == 0:
 				model.eval()
 				with torch.no_grad():

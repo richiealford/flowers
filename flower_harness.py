@@ -30,7 +30,7 @@ test_data = datasets.ImageFolder(data_dir + '/test', transform=test_transforms)
 trainloader = torch.utils.data.DataLoader(train_data, batch_size=64, shuffle=True)
 testloader = torch.utils.data.DataLoader(test_data, batch_size=32)
 
-model = flower_model.makeModel()
+model = flower_model.makeVGG16Model()
 criterion = nn.NLLLoss()
 optimizer = optim.Adam(model.classifier.parameters(), lr=0.001)
 
