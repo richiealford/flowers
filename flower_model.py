@@ -26,11 +26,13 @@ def makeVGG16Model():
 		param.requires_grad = False
 
 	classifier = nn.Sequential(OrderedDict([
-                                          ('fc1', nn.Linear(25088, 4096, bias=True)),
+                                          ('fc1', nn.Linear(25088, 4096)),
                                           ('relu', nn.ReLU()),
-                                          ('fc2', nn.Linear(4096, 1000, bias=True)),
-                                          ('relu2', nn.ReLU()),	
-                                          ('fc3', nn.Linear(1000, 102)),
+                                          ('dropout1', nn.Dropout(p=0.5))
+                                          ('fc2', nn.Linear(4096, 650, bias=True)),
+                                          ('relu2', nn.ReLU()),
+                                          ('dropout2', nn.Dropout(p=0.05)),	
+                                          ('fc3', nn.Linear(650, 102)),
                                           ('output', nn.LogSoftmax(dim=1))
                                           ]))
 
